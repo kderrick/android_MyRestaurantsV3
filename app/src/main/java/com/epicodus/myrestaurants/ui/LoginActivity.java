@@ -1,5 +1,6 @@
 package com.epicodus.myrestaurants.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -23,7 +24,6 @@ import butterknife.ButterKnife;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String TAG = LoginActivity.class.getSimpleName();
-
     @Bind(R.id.passwordLoginButton) Button mPasswordLoginButton;
     @Bind(R.id.emailEditText) EditText mEmailEditText;
     @Bind(R.id.passwordEditText) EditText mPasswordEditText;
@@ -31,6 +31,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Firebase mFirebaseRef;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mSharedPreferencesEditor;
+    private ProgressDialog mAuthProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mFirebaseRef = new Firebase(Constants.FIREBASE_URL);
         mPasswordLoginButton.setOnClickListener(this);
         mRegisterTextView.setOnClickListener(this);
+        mAuthProgressDialog = new ProgressDialog(this);
+        mAuthProgressDialog.setTitle("Loading...");
+        mAuthProgressDialog.setMessage("Checking with Firebase...");
+        mAuthProgressDialog.setCancelable(false);
     }
 
     @Override
@@ -67,10 +72,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             mPasswordEditText.setError("Password cannot be blank");
         }
 
-        mFirebaseRef.authWithPassword(email, password, new Firebase.AuthResultHandler() {
+        mAuthProgressDialog.show();
 
+        mFirebaseRef.authWithPassword(email, password, new Firebase.AuthResultHandler() {
             @Override
             public void onAuthenticated(AuthData authData) {
+                mAuthProgressDialog.dismiss();
                 if (authData != null) {
                     String userUid = authData.getUid();
                     mSharedPreferencesEditor.putString(Constants.KEY_UID, userUid).apply();
@@ -83,6 +90,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onAuthenticationError(FirebaseError firebaseError) {
+                mAuthProgressDialog.dismiss();
                 switch (firebaseError.getCode()) {
                     case FirebaseError.INVALID_EMAIL:
                     case FirebaseError.USER_DOES_NOT_EXIST:

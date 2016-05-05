@@ -2,7 +2,6 @@ package com.epicodus.myrestaurants;
 
 public class Constants {
 
-
     //Constants for Yelp API usage:
     public static final String YELP_CONSUMER_KEY = BuildConfig.YELP_CONSUMER_KEY;
     public static final String YELP_CONSUMER_SECRET = BuildConfig.YELP_CONSUMER_SECRET;
@@ -28,6 +27,5 @@ public class Constants {
     public static final String FIREBASE_URL_USERS = FIREBASE_URL + "/" + FIREBASE_LOCATION_USERS;
     public static final String FIREBASE_PROPERTY_EMAIL = "email";
     public static final String KEY_UID = "UID";
-
-
+    public static final String KEY_USER_EMAIL = "email";
 }

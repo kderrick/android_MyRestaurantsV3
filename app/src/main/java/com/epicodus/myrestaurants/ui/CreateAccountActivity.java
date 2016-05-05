@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -53,6 +54,11 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
         final String password = mPasswordEditText.getText().toString();
         final String confirmPassword = mConfirmPasswordEditText.getText().toString();
 
+        boolean validEmail = isValidEmail(email);
+        boolean validName = isValidName(name);
+        boolean validPassword = isValidPassword(password, confirmPassword);
+        if(!validEmail || !validName || !validPassword) return;
+
         mFirebaseRef.createUser(email, password, new Firebase.ValueResultHandler<Map<String, Object>>() {
             @Override
             public void onSuccess(Map<String, Object> result) {
@@ -72,5 +78,33 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
         final Firebase userLocation = new Firebase(Constants.FIREBASE_URL_USERS).child(uid);
         User newUser = new User(name, email);
         userLocation.setValue(newUser);
+    }
+
+    private boolean isValidEmail(String email) {
+        boolean isGoodEmail = (email != null && Patterns.EMAIL_ADDRESS.matcher(email).matches());
+        if (!isGoodEmail) {
+            mEmailEditText.setError("Please enter valid email");
+            return false;
+        }
+        return isGoodEmail;
+    }
+
+    private boolean isValidName(String name) {
+        if(name.equals("")) {
+            mEmailEditText.setError("Please enter your name");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isValidPassword(String password, String confirmPassword) {
+        if(password.length() < 6) {
+            mPasswordEditText.setError("Please create password longer than 6 characters");
+            return false;
+        } else if(!password.equals(confirmPassword)) {
+            mPasswordEditText.setError("Passwords don't match");
+            return false;
+        }
+        return true;
     }
 }
