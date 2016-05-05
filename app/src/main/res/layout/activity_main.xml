@@ -28,6 +28,17 @@
         android:id="@+id/appNameTextView"
         android:textStyle="bold" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome user"
+        android:layout_below="@+id/appNameTextView"
+        android:id="@+id/welcomeTextView"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20dp"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold" />
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
