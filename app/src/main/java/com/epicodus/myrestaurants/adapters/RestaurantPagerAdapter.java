@@ -9,9 +9,6 @@ import com.epicodus.myrestaurants.ui.RestaurantDetailFragment;
 
 import java.util.ArrayList;
 
-/**
- * Created by staff on 4/25/16.
- */
 public class RestaurantPagerAdapter extends FragmentPagerAdapter {
     private ArrayList<Restaurant> mRestaurants;
 

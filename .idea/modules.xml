@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MyRestaurants2.iml" filepath="$PROJECT_DIR$/MyRestaurants2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MyRestaurants4-master.iml" filepath="$PROJECT_DIR$/MyRestaurants4-master.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/my-restaurants-3.11_user_authentication_logging_out.iml" filepath="$PROJECT_DIR$/my-restaurants-3.11_user_authentication_logging_out.iml" />
     </modules>
   </component>
 </project>

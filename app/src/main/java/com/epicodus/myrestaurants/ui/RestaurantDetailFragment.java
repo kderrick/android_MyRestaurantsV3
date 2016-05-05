@@ -2,8 +2,10 @@ package com.epicodus.myrestaurants.ui;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +28,7 @@ import butterknife.ButterKnife;
 public class RestaurantDetailFragment extends Fragment implements View.OnClickListener {
     private static final int MAX_WIDTH = 400;
     private static final int MAX_HEIGHT = 300;
-
+    private SharedPreferences mSharedPreferences;
     @Bind(R.id.restaurantImageView) ImageView mImageLabel;
     @Bind(R.id.restaurantNameTextView) TextView mNameLabel;
     @Bind(R.id.cuisineTextView) TextView mCategoriesLabel;
@@ -49,6 +51,7 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mRestaurant = Parcels.unwrap(getArguments().getParcelable("restaurant"));
     }
 
@@ -97,8 +100,12 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
             startActivity(mapIntent);
         }
         if (v == mSaveRestaurantButton) {
-            Firebase ref = new Firebase(Constants.FIREBASE_URL_RESTAURANTS);
-            ref.push().setValue(mRestaurant);
+            String userUid = mSharedPreferences.getString(Constants.KEY_UID, null);
+            Firebase userRestaurantsFirebaseRef = new Firebase(Constants.FIREBASE_URL_RESTAURANTS).child(userUid);
+            Firebase pushRef = userRestaurantsFirebaseRef.push();
+            String restaurantPushId = pushRef.getKey();
+            mRestaurant.setPushId(restaurantPushId);
+            userRestaurantsFirebaseRef.push().setValue(mRestaurant);
             Toast.makeText(getContext(), "Saved", Toast.LENGTH_SHORT).show();
         }
     }
