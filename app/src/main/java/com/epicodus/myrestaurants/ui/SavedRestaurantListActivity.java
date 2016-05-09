@@ -26,9 +26,7 @@ public class SavedRestaurantListActivity extends AppCompatActivity implements On
     private FirebaseRestaurantListAdapter mAdapter;
     private SharedPreferences mSharedPreferences;
     private ItemTouchHelper mItemTouchHelper;
-
-    @Bind(R.id.recyclerView)
-    RecyclerView mRecyclerView;
+    @Bind(R.id.recyclerView) RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +43,7 @@ public class SavedRestaurantListActivity extends AppCompatActivity implements On
     private void setUpFirebaseQuery() {
         String userUid = mSharedPreferences.getString(Constants.KEY_UID, null);
         String location = mFirebaseRestaurantsRef.child(userUid).toString();
-        mQuery = new Firebase(location);
+        mQuery = new Firebase(location).orderByChild("index");
     }
 
     private void setUpRecyclerView() {
@@ -60,5 +58,18 @@ public class SavedRestaurantListActivity extends AppCompatActivity implements On
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         mItemTouchHelper.startDrag(viewHolder);
+    }
+
+    @Override
+    protected  void onPause() {
+        super.onPause();
+        String uid = mSharedPreferences.getString(Constants.KEY_UID, null);
+        for (Restaurant restaurant : mAdapter.getItems()) {
+            String pushID = restaurant.getPushId();
+            restaurant.setIndex(Integer.toString(mAdapter.getItems().indexOf(restaurant)));
+            mFirebaseRestaurantsRef.child(uid)
+                    .child(pushID)
+                    .setValue(restaurant);
+        }
     }
 }
